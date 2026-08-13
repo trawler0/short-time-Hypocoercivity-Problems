@@ -1,0 +1,72 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage[sort]{natbib}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{bm}
+\usepackage[normalem]{ulem}
+
+\newcommand{\C}{\mathsf{C}}
+\newcommand{\Pro}{\mathsf{P}}
+ 
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{problem}{Problem}
+\newtheorem{remark}{Remark}
+\newtheorem{corollary}{Corollary}
+\newtheorem{example}{Example}
+\newtheorem{proposition}{Proposition}
+
+
+\geometry{margin=1in}
+\onehalfspacing
+
+\title{Long- and short-time behavior of hypocoercive evolution equations with higher index via modal decompositions}
+\author{Marco Roschkowski, Hannes Gernandt \\
+\normalsize University of Wuppertal \\
+\normalsize \texttt{\char`\{gernandt, roschkowski\char`\}@uni-wuppertal.de}}
+
+\date{\today}
+
+\begin{document}
+
+\section{Introduction}
+We generally consider systems 
+\begin{equation}\label{eqn: system abstract}
+    \dot{x}(t) = -\C x(t), \quad x(0) = x_0,
+\end{equation}
+where $\C$ is a maximal dissipative operator on a Hilbert space $H$. We are interested in the long- and short-time behavior of the solution $x(t) = e^{tA}x_0$ of \eqref{eqn: system abstract}.
+In this case, $(\Pro(t))_{t\geq 0}$ is a contraction semigroup on $H$.
+
+\begin{problem}
+    Suppose that $\C$ is a hypocoercivte matrix.It has been shown that \cite{achleitner2023hypocoercivity}
+    that the hypocoercivity index $m$ of $\C$ yields
+    $\|\Pro(t)\|^2 = 1 - c t^{2m+1} + \mathcal{O}(t^{2m+2})$ with $c$ explicitly computable.
+    \begin{itemize}
+        \item [\rm (a)] Find a \emph{secondary hypocoercivity index} $m_2$ which determines $c_2$ such that
+        $\|\Pro(t)\|^2 = 1 - c_1 t^{2m+1} + c_2 t^{2m+2} + \mathcal{O}(t^{2m+3})$ with $m_1 = m$;
+        \item [\rm (b)] Find all \emph{higher order hypocoercivity indices} $m_2, m_3, \ldots$ which determine the corresponding coefficients $c_2, c_3, \ldots$.
+        such that $\|\Pro(t)\|^2 = 1 - \sum\limits_{j=1}^\infty c_j t^{2m + j}$.
+    \end{itemize}
+\end{problem}
+
+
+
+
+
+
+% Re-enable these lines after adding citations and entries to references.bib.
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
