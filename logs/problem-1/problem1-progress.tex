@@ -1,0 +1,717 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,margin=27mm,headheight=14pt]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
+\hypersetup{
+  pdftitle={Problem 1: Higher-Order Short-Time Hypocoercivity},
+  pdfsubject={Human-readable research log for Problem 1},
+  pdfkeywords={hypocoercivity, short-time asymptotics, matrix semigroups, spectral jet}
+}
+
+\DeclareMathOperator{\Log}{Log}
+\setlist{nosep,leftmargin=*}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\allowdisplaybreaks
+\emergencystretch=2em
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Problem 1 research log}
+\fancyhead[R]{Short-time hypocoercivity}
+\fancyfoot[C]{\thepage}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\title{\textbf{Problem 1: Higher-Order Short-Time Hypocoercivity}\\[0.5em]
+\large Human-Readable Research Log}
+\author{}
+\date{}
+
+\begin{document}
+\pagenumbering{roman}
+\maketitle
+\thispagestyle{empty}
+
+\begin{center}
+\begin{minipage}{0.92\textwidth}
+\small
+\textbf{Problem ID:} \texttt{problem-1-higher-order-short-time}\\[0.35em]
+\textbf{Status:} Part (a) solved; part (b) reduced to a complete analytic spectral-jet construction with exact coefficient formulas.\\[0.35em]
+\textbf{Setting:} Finite-dimensional complex matrices and the Euclidean operator norm.
+\end{minipage}
+\end{center}
+
+\vspace{0.75em}
+{\small\tableofcontents}
+\clearpage
+\pagenumbering{arabic}
+
+\section{Operational specification}\label{operational-specification}
+
+\subsection{Objective}\label{objective}
+
+For
+
+\[
+P(t)=e^{-Ct},\qquad C_H:=\frac{C+C^*}{2}\ge 0,
+\]
+
+let
+
+\[
+f(t):=\|P(t)\|_2^2.
+\]
+
+The primary hypocoercivity index \(m\) gives
+
+\[
+f(t)=1-c_1t^{2m+1}+O(t^{2m+2}).
+\]
+
+The tasks are:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  determine the coefficient at order \(2m+2\), and decide whether it requires a new integer index;
+\item
+  give a mathematically complete mechanism that determines every subsequent Taylor coefficient, including degenerate singular-value branches.
+\end{enumerate}
+
+\subsection{Success criterion}\label{success-criterion}
+
+A successful result must:
+
+\begin{itemize}
+\tightlist
+\item
+  prove the claimed coefficient identities, not infer them only from examples;
+\item
+  distinguish the coercive edge case \(m=0\) from the genuinely hypocoercive case \(m\ge 1\);
+\item
+  handle multiplicities of the maximal singular-value branch;
+\item
+  provide an exact finite-order algorithm for all higher coefficients;
+\item
+  keep the coefficient convention for the norm separate from that for the squared norm.
+\end{itemize}
+
+\subsection{Non-counting outcomes and known failure modes}\label{non-counting-outcomes-and-known-failure-modes}
+
+The following would not solve the problem:
+
+\begin{itemize}
+\tightlist
+\item
+  expanding one fixed trajectory instead of the propagator norm envelope;
+\item
+  assuming the largest singular value is simple at \(t=0\);
+\item
+  confusing the coefficient for \(\lVert P(t)\rVert_2\) with that for \(\lVert P(t)\rVert_2^2\);
+\item
+  claiming \(f(-t)=1/f(t)\) (this is false in general);
+\item
+  postulating integer indices that cannot encode continuously varying coefficients;
+\item
+  omitting the coercive case \(m=0\).
+\end{itemize}
+
+\section{Known leading term}\label{known-leading-term}
+
+Let
+
+\[
+K_{m-1}:=\ker\!\left(\sum_{j=0}^{m-1}(C^*)^j C_H C^j\right).
+\]
+
+For \(m\ge 1\), Theorem 2.7 of Achleitner--Arnold--Carlen gives the leading coefficient of the norm. Therefore the leading coefficient of the \textbf{squared} norm is
+
+\[
+\boxed{
+ c_1=\frac{2}{(2m+1)!\binom{2m}{m}}
+ \min_{\substack{x\in K_{m-1}\\ \|x\|=1}}
+ \langle x,(C^*)^mC_HC^m x\rangle .
+}
+\]
+
+For \(m=0\),
+
+\[
+\boxed{c_1=2\lambda_{\min}(C_H).}
+\]
+
+Reference: F. Achleitner, A. Arnold, E. A. Carlen, \emph{The hypocoercivity index for the short time behavior of linear time-invariant ODE systems}, J. Differential Equations 371 (2023), 83--115, Theorem 2.7.
+
+\section{Main structural theorem: an odd logarithmic normal form}\label{main-structural-theorem-an-odd-logarithmic-normal-form}
+
+\subsection{Theorem}\label{theorem}
+
+For every matrix \(C\), there is an analytic Hermitian matrix function \(A_C(s)\) near \(s=0\) and an analytic eigenvalue branch \(\alpha_*(s)\) of \(A_C(s)\), maximal for all sufficiently small \(s>0\), such that
+
+\[
+\boxed{
+ \log\|e^{-Ct}\|_2^2=t\,\alpha_*(t^2),\qquad 0<t<\varepsilon.
+}
+\]
+
+Consequently, the right-hand Taylor expansion of the logarithmic squared norm contains only odd powers:
+
+\[
+\boxed{
+ \log f(t)=\sum_{r=0}^{\infty}\kappa_r t^{2r+1},
+ \qquad
+ \alpha_*(s)=\sum_{r=0}^{\infty}\kappa_r s^r.
+}
+\]
+
+This is stronger than the parity of the leading exponent: it constrains the entire local expansion.
+
+\subsection{Canonical construction}\label{canonical-construction}
+
+Set
+
+\[
+Q(t):=e^{-C^*t}e^{-Ct},\qquad Z(t):=\Log Q(t),
+\]
+
+where \(\Log\) is the principal matrix logarithm near the identity. Also set
+
+\[
+S(t):=e^{C^*t}=U(t)R(t)
+\]
+
+to be the right polar decomposition, with \(U(t)\) unitary and \(R(t)>0\). Let
+
+\[
+W(t):=U(t)^{-1/2}
+\]
+
+use the principal unitary square root near the identity, and define
+
+\[
+\widehat Z(t):=W(t)^*Z(t)W(t).
+\]
+
+Then \(\widehat Z\) is analytic, Hermitian, and exactly odd. Hence there is a unique analytic Hermitian \(A_C(s)\) such that
+
+\[
+\widehat Z(t)=tA_C(t^2).
+\]
+
+Because \(\widehat Z(t)\) and \(Z(t)\) are unitarily similar, they have the same eigenvalues.
+
+\subsection{Proof}\label{proof}
+
+First,
+
+\[
+Q(-t)=e^{C^*t}e^{Ct}
+      =S(t)Q(t)^{-1}S(t)^{-1}.
+\]
+
+Functional calculus therefore gives
+
+\[
+Z(-t)=-S(t)Z(t)S(t)^{-1}. \tag{3.1}
+\]
+
+Use the following elementary lemma.
+
+\textbf{Hermitian-similarity lemma.} If Hermitian matrices \(A\) and \(B\) satisfy \(B=SAS^{-1}\) and \(S=UR\) is the right polar decomposition, then \(R\) commutes with \(A\) and \(B=UAU^*\).
+
+Indeed, Hermiticity of \(RAR^{-1}\) gives
+
+\[
+RAR^{-1}=R^{-1}AR,
+\]
+
+so \(R^2A=AR^2\); positivity of \(R\) then implies \(RA=AR\).
+
+Apply the lemma to \(A=-Z(t)\) and \(B=Z(-t)\) in (3.1). It follows that
+
+\[
+Z(-t)=-U(t)Z(t)U(t)^*. \tag{3.2}
+\]
+
+The polar unitary of \(S(t)^{-1}=S(-t)\) is \(U(t)^*\), so
+
+\[
+U(-t)=U(t)^*.
+\]
+
+Therefore
+
+\[
+W(-t)=U(-t)^{-1/2}=U(t)^{1/2}=U(t)W(t).
+\]
+
+Using this and (3.2),
+
+\[
+\begin{aligned}
+\widehat Z(-t)
+ &=W(-t)^*Z(-t)W(-t)\\
+ &=-W(t)^*Z(t)W(t)\\
+ &=-\widehat Z(t).
+\end{aligned}
+\]
+
+Thus \(\widehat Z(t)=tA_C(t^2)\) with \(A_C\) analytic and Hermitian. By Rellich's theorem, the eigenvalues of the one-parameter Hermitian analytic family \(A_C(s)\) admit analytic branches. Comparing the finitely many Taylor germs lexicographically selects one branch \(\alpha_*(s)\) that is maximal for all sufficiently small \(s>0\). For \(t>0\),
+
+\[
+\lambda_{\max}(Z(t))
+ =\lambda_{\max}(\widehat Z(t))
+ =t\alpha_*(t^2).
+\]
+
+Finally,
+
+\[
+\log f(t)=\log\lambda_{\max}(Q(t))=\lambda_{\max}(Z(t)),
+\]
+
+which proves the theorem.
+
+\subsection{First matrix jet}\label{first-matrix-jet}
+
+Writing
+
+\[
+C=C_H+C_A,\qquad C_A:=\frac{C-C^*}{2},\quad C_A^*=-C_A,
+\]
+
+a Baker--Campbell--Hausdorff expansion of the canonical normal form gives
+
+\[
+\boxed{
+ A_C(s)=-2C_H+\frac{s}{12}[C_A,[C_H,C_A]]+O(s^2).
+}
+\]
+
+For \(x\in\ker(C_H)\),
+
+\[
+\left\langle x,\frac1{12}[C_A,[C_H,C_A]]x\right\rangle
+=-\frac16\langle C_Ax,C_HC_Ax\rangle\le0.
+\]
+
+This recovers the \(m=1\) leading coefficient directly from ordinary degenerate Hermitian perturbation theory.
+
+\section{Answer to part (a)}\label{answer-to-part-a}
+
+Let
+
+\[
+a:=2m+1.
+\]
+
+The known leading term and the odd logarithmic normal form imply
+
+\[
+\kappa_0=\cdots=\kappa_{m-1}=0,
+\qquad
+\kappa_m=-c_1.
+\]
+
+Hence
+
+\[
+f(t)=\exp\!\left(-c_1t^a+\kappa_{m+1}t^{a+2}+\kappa_{m+2}t^{a+4}+\cdots\right).
+\]
+
+\subsection{\texorpdfstring{Genuinely hypocoercive case: \(m\ge 1\)}{Genuinely hypocoercive case: m\textbackslash ge 1}}\label{genuinely-hypocoercive-case-mge-1}
+
+Here \(a\ge 3\), so products from the exponential cannot contribute before order \(2a\). There is no logarithmic term of degree \(a+1\), because \(a+1\) is even. Therefore
+
+\[
+\boxed{
+ [t^{2m+2}]\,\|e^{-Ct}\|_2^2=0.
+}
+\]
+
+In the notation of part (a),
+
+\[
+\boxed{c_2=0\qquad(m\ge1).}
+\]
+
+Thus there is no nontrivial secondary integer index controlling this coefficient. The previous remainder can be sharpened by one order:
+
+\[
+\boxed{
+\|e^{-Ct}\|_2^2=1-c_1t^{2m+1}+O(t^{2m+3}),\qquad m\ge1.
+}
+\]
+
+The first potentially new independent scalar is \(\kappa_{m+1}\), at degree \(2m+3\), not degree \(2m+2\).
+
+\subsection{\texorpdfstring{Coercive edge case: \(m=0\)}{Coercive edge case: m=0}}\label{coercive-edge-case-m0}
+
+Now
+
+\[
+\log f(t)=-c_1t+O(t^3).
+\]
+
+Exponentiation yields
+
+\[
+f(t)=1-c_1t+\frac{c_1^2}{2}t^2+O(t^3),
+\]
+
+so
+
+\[
+\boxed{
+ c_2=\frac{c_1^2}{2}=2\lambda_{\min}(C_H)^2,
+ \qquad m=0.
+}
+\]
+
+Again, no independent secondary index is needed.
+
+\section{Answer to part (b): the complete logarithmic spectral jet}\label{answer-to-part-b-the-complete-logarithmic-spectral-jet}
+
+A sequence of integers alone cannot determine numerical Taylor coefficients: even for
+
+\[
+C_\varepsilon=
+\begin{pmatrix}
+1&-\varepsilon\\
+\varepsilon&0
+\end{pmatrix},\qquad \varepsilon\ne0,
+\]
+
+the HC index is always \(m=1\), whereas \(c_1=\varepsilon^2/6\) varies continuously. The correct complete invariant is therefore an integer support hierarchy paired with continuous spectral-jet amplitudes.
+
+\subsection{Definition}\label{definition}
+
+Define the \textbf{logarithmic hypocoercivity jet} by
+
+\[
+\mathcal J(C):=(\kappa_0,\kappa_1,\kappa_2,\ldots),
+\]
+
+where the \(\kappa_r\) are the Taylor coefficients of the right-maximal eigenvalue branch of \(A_C(s)\). Define its nonzero support indices by
+
+\[
+m_1:=m,
+\qquad
+m_{\ell+1}:=\min\{r>m_\ell:\kappa_r\ne0\},
+\]
+
+whenever the set is nonempty. The complete higher-order data are the pairs
+
+\[
+\boxed{(m_\ell,\kappa_{m_\ell}).}
+\]
+
+Generically \(m_2=m+1\), but symmetries or algebraic cancellations can create gaps. These support indices locate the genuinely new logarithmic invariants; the amplitudes are indispensable.
+
+\subsection{Exact coefficient formula}\label{exact-coefficient-formula}
+
+Write
+
+\[
+f(t)=\sum_{n=0}^{\infty}a_nt^n,\qquad a_0=1.
+\]
+
+Then
+
+\[
+\boxed{
+ a_n=
+ \sum_{\substack{k_0,k_1,\ldots\ge0\\
+                  \sum_{r\ge0}(2r+1)k_r=n}}
+ \prod_{r\ge0}\frac{\kappa_r^{k_r}}{k_r!}.
+}
+\]
+
+Only finitely many \(k_r\) occur for each fixed \(n\). Equivalently, from \(f'=(\log f)'f\),
+
+\[
+\boxed{
+ a_0=1,\qquad
+ a_n=\frac1n
+ \sum_{\substack{r\ge0\\2r+1\le n}}
+ (2r+1)\kappa_r\,a_{n-(2r+1)}.
+}
+\]
+
+These identities determine every coefficient exactly once the logarithmic jet is known.
+
+The sign convention in part (b) of the problem statement is not stable for higher orders: the coefficients need not all be positive. If that statement is written as
+
+\[
+f(t)=1-\sum_{j\ge1}c_jt^{2m+j},
+\]
+
+then simply
+
+\[
+c_j=-a_{2m+j}.
+\]
+
+\subsection{\texorpdfstring{Immediate sparsity consequences for \(m\ge 1\)}{Immediate sparsity consequences for m\textbackslash ge 1}}\label{immediate-sparsity-consequences-for-mge-1}
+
+Before nonlinear products can occur,
+
+\[
+a_n=
+\begin{cases}
+\kappa_{(n-1)/2},&n\text{ odd and }2m+1\le n<4m+2,\\
+0,&n\text{ even and }2m+2\le n<4m+2.
+\end{cases}
+\]
+
+In particular,
+
+\[
+\begin{aligned}
+f(t)=1&-c_1t^{2m+1}
+ +\kappa_{m+1}t^{2m+3}
+ +\kappa_{m+2}t^{2m+5}+\cdots\\
+ &+\kappa_{2m}t^{4m+1}
+ +\frac{c_1^2}{2}t^{4m+2}
+ +O(t^{4m+3}).
+\end{aligned}
+\]
+
+Thus every even degree \(2m+2,2m+4,\ldots,4m\) vanishes, and the first forced even term occurs at degree \(4m+2\), with coefficient \(c_1^2/2\).
+
+\section{Exact finite-order computation of the jet}\label{exact-finite-order-computation-of-the-jet}
+
+For any requested order \(R\), the following is a finite algebraic procedure.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Expand \(Q(t)=e^{-C^*t}e^{-Ct}\) through degree \(2R+1\).
+\item
+  Expand \(Z(t)=\Log Q(t)\) to the same degree.
+\item
+  Expand the polar unitary
+
+  \[
+  U(t)=S(t)(S(t)^*S(t))^{-1/2},\qquad S(t)=e^{C^*t}.
+  \]
+\item
+  Form \(W(t)=U(t)^{-1/2}\) and
+
+  \[
+  \widehat Z(t)=W(t)^*Z(t)W(t)=t\sum_{r=0}^{R}A_rt^{2r}+O(t^{2R+3}).
+  \]
+\item
+  Compute the right-maximal analytic eigenvalue branch of
+
+  \[
+  A_C(s)=A_0+A_1s+\cdots+A_Rs^R+O(s^{R+1}).
+  \]
+
+  Rellich--Kato perturbation theory gives \(\kappa_0,\ldots,\kappa_R\). Multiplicities are handled by analytic spectral projections or, equivalently, by a Feshbach/Schur-complement reduction on the currently maximizing eigenspace. One must not use a simple-eigenvector formula before this reduction.
+\item
+  Convert the \(\kappa_r\) to the coefficients \(a_n\) with the recurrence above.
+\end{enumerate}
+
+All operations in steps 1--4 are standard convergent matrix power-series operations near the identity. Step 5 is a finite-dimensional Hermitian analytic eigenvalue problem, so it has ordinary power-series branches rather than Puiseux branches.
+
+For a simple selected eigenvalue after the required block reductions, the usual recursion is explicit. If
+
+\[
+A_C(s)v(s)=\alpha_*(s)v(s),
+\]
+
+with \(v_0^*v(s)=1\), then, after fixing \(v_0^*v_j=0\) for \(j\ge 1\),
+
+\[
+\kappa_n=v_0^*\sum_{j=1}^{n}A_jv_{n-j},
+\]
+
+and the complementary components \(v_n\) are obtained by applying the reduced resolvent of \(A_0-\kappa_0 I\). The same recursion is applied after each degenerate Kato reduction.
+
+\section{Verification}\label{verification}
+
+\subsection{\texorpdfstring{Exact symbolic check: an \(m=1\) family}{Exact symbolic check: an m=1 family}}\label{exact-symbolic-check-an-m1-family}
+
+For
+
+\[
+C_\varepsilon=
+\begin{pmatrix}
+1&-\varepsilon\\
+\varepsilon&0
+\end{pmatrix},
+\]
+
+exact symbolic expansion gives
+
+\[
+\begin{aligned}
+\|e^{-C_\varepsilon t}\|_2^2
+=1&-\frac{\varepsilon^2}{6}t^3
+ +\left(\frac{\varepsilon^2}{60}+\frac{\varepsilon^4}{120}\right)t^5
+ +\frac{\varepsilon^4}{72}t^6+O(t^7),\\
+\log\|e^{-C_\varepsilon t}\|_2^2
+=&-\frac{\varepsilon^2}{6}t^3
+ +\left(\frac{\varepsilon^2}{60}+\frac{\varepsilon^4}{120}\right)t^5
+ +O(t^7).
+\end{aligned}
+\]
+
+The \(t^4\) coefficient is exactly zero, while the \(t^6\) coefficient is
+
+\[
+\frac12\left(\frac{\varepsilon^2}{6}\right)^2,
+\]
+
+as predicted.
+
+At \(\varepsilon=3/10\), this is the matrix in Example 2.12 of Achleitner--Arnold--Carlen, and the exact expansion continues as
+
+\[
+\begin{aligned}
+\|e^{-Ct}\|_2^2=1
+&-\frac{3}{200}t^3
++\frac{627}{400000}t^5
++\frac{9}{80000}t^6
+-\frac{14983}{80000000}t^7\\
+&-\frac{1881}{80000000}t^8+O(t^9),\\
+\log\|e^{-Ct}\|_2^2=
+&-\frac{3}{200}t^3
++\frac{627}{400000}t^5
+-\frac{14983}{80000000}t^7+O(t^9).
+\end{aligned}
+\]
+
+\subsection{\texorpdfstring{Exact symbolic check: an \(m=2\) chain}{Exact symbolic check: an m=2 chain}}\label{exact-symbolic-check-an-m2-chain}
+
+Let
+
+\[
+C=
+\begin{pmatrix}
+1&-2&0\\
+2&0&-1\\
+0&1&0
+\end{pmatrix},\qquad C_H=\operatorname{diag}(1,0,0).
+\]
+
+Here
+
+\[
+\sum_{j=0}^{1}(C^*)^jC_HC^j
+\]
+
+is singular, whereas the sum through \(j=2\) is positive definite (its determinant is \(16\)), so \(m=2\). Exact characteristic-polynomial recursion gives
+
+\[
+\begin{aligned}
+\|e^{-Ct}\|_2^2=1
+&-\frac1{90}t^5
+-\frac{11}{7560}t^7
++\frac7{32400}t^9
++\frac1{16200}t^{10}\\
+&+\frac{3779}{59875200}t^{11}
++\frac{11}{680400}t^{12}+O(t^{13}).
+\end{aligned}
+\]
+
+The \(t^6\) and \(t^8\) coefficients vanish. Moreover,
+
+\[
+\frac1{16200}=\frac12\left(\frac1{90}\right)^2,
+\]
+
+and the \(t^{12}\) logarithmic coefficient cancels because
+
+\[
+\frac{11}{680400}
+=\left(-\frac1{90}\right)\left(-\frac{11}{7560}\right).
+\]
+
+Thus the logarithm again has only odd powers.
+
+\subsection{Coercive edge check}\label{coercive-edge-check}
+
+Replacing the \(m=1\) family by \(I+C_\varepsilon\) multiplies the squared norm by \(e^{-2t}\). Hence
+
+\[
+\log\|e^{-(I+C_\varepsilon)t}\|_2^2
+=-2t-\frac{\varepsilon^2}{6}t^3+O(t^5),
+\]
+
+and
+
+\[
+\|e^{-(I+C_\varepsilon)t}\|_2^2
+=1-2t+2t^2+O(t^3).
+\]
+
+This verifies \(c_2=c_1^2/2\) when \(m=0\).
+
+\section{Adversarial audit}\label{adversarial-audit}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Branch multiplicity:} The proof does not assume a simple singular value at \(t=0\); the odd matrix normal form and Rellich branches handle full degeneracy.
+\item
+  \textbf{Right side versus two-sided norm:} The odd analytic function constructed above agrees with the maximal branch for \(t>0\). It need not equal \(\log\lVert e^{-Ct}\rVert_2^2\) for negative \(t\); for negative \(t\), ordering of the singular-value branches reverses. No false identity \(f(-t)=1/f(t)\) is used.
+\item
+  \textbf{Norm convention:} The cited theorem states the coefficient for \(\lVert P(t)\rVert_2\); the formula in this log includes the factor of two required for \(\lVert P(t)\rVert_2^2\).
+\item
+  \textbf{Coercive edge case:} \(m=0\) is exceptional because squaring/exponentiation contributes already at degree two.
+\item
+  \textbf{Signs:} Higher Taylor coefficients are not sign-definite, so the all-minus notation in part (b) is only a naming convention.
+\item
+  \textbf{Discrete insufficiency:} Integer indices locate vanishing orders but cannot determine amplitudes. The pairs \((m_\ell,\kappa_{m_\ell})\), or equivalently the full spectral jet, are the complete data.
+\item
+  \textbf{Scope:} The analytic argument is finite-dimensional. Infinite-dimensional operator norms can fail to be analytic at zero, so extending this exact hierarchy to unbounded or general Hilbert-space generators requires separate hypotheses.
+\item
+  \textbf{Machine checks:} Exact rational symbolic expansions were obtained for independent \(m=1\) and \(m=2\) examples; numerical random-matrix checks also found even logarithmic coefficients at numerical roundoff. These checks support but are not substituted for the algebraic proof.
+\end{itemize}
+
+\section{Final status and remaining gap}\label{final-status-and-remaining-gap}
+
+\subsection{Strongest verified result}\label{strongest-verified-result}
+
+Part (a) is completely resolved:
+
+\[
+\boxed{
+ c_2=0\ (m\ge1),
+ \qquad
+ c_2=c_1^2/2\ (m=0).
+}
+\]
+
+Part (b) has a complete structural and finite-order computational answer:
+
+\[
+\boxed{
+ \|e^{-Ct}\|_2^2
+ =\exp\!\left(\sum_{r\ge0}\kappa_rt^{2r+1}\right),
+}
+\]
+
+where the \(\kappa_r\) are obtained from the maximal analytic eigenvalue branch of the explicitly constructed Hermitian family \(A_C(s)\). The coefficient partition formula and recurrence then produce all higher coefficients.
+
+\subsection{Residual limitation}\label{residual-limitation}
+
+No single closed scalar expression analogous to the leading-minimum formula is written here for every \(\kappa_r\); at high order, degenerate Kato/Feshbach reductions naturally produce increasingly large noncommutative polynomial expressions. This is a simplification/representation gap, not a gap in finite-order computability or in the parity theorem.
+
+\subsection{Highest-value next action}\label{highest-value-next-action}
+
+Implement the matrix-series plus Kato/Feshbach recursion as a computer-algebra routine, then simplify the first two genuinely new jets \(\kappa_{m+1}\) and \(\kappa_{m+2}\) into invariant formulas for selected multiplicity patterns.
+
+\end{document}
