@@ -1,0 +1,69 @@
+{
+  "description": "Minimum dimensions needed to compare problems, runs, outcomes, verification, selection, and intervention patterns without silently treating missingness as a value.",
+  "event_requirements": {
+    "approach.created": [
+      "subject.id",
+      "data.approach_family"
+    ],
+    "claim.created": [
+      "subject.id",
+      "data.claim_status",
+      "data.verification_status",
+      "data.novelty_status"
+    ],
+    "human.intervention": [
+      "data.intervention_type"
+    ],
+    "protocol.gap": [
+      "data.missing_fields",
+      "data.recovery_recommended"
+    ],
+    "recovery.completed": [
+      "data.bundle_id",
+      "data.records_ingested",
+      "data.human_reviewed"
+    ],
+    "resource.recorded": [
+      "data.resource_kind"
+    ],
+    "run.ended": [
+      "run_id",
+      "outcome",
+      "data.end_reason",
+      "data.capture_completeness",
+      "data.protocol_complete"
+    ],
+    "run.started": [
+      "run_id",
+      "actor.type",
+      "actor.name",
+      "actor.model",
+      "data.interface",
+      "data.independent",
+      "data.objective",
+      "data.input_refs"
+    ],
+    "selection.recorded": [
+      "data.decision"
+    ],
+    "verification.recorded": [
+      "data.verification_type",
+      "data.result"
+    ]
+  },
+  "name": "core-longitudinal-analytics-v1",
+  "problem_requirements": [
+    "problem_id",
+    "title",
+    "status",
+    "created_at",
+    "domains",
+    "source_refs",
+    "human_log",
+    "metadata.registration_mode"
+  ],
+  "profile_version": 1,
+  "required_event_types": [
+    "problem.created"
+  ]
+}

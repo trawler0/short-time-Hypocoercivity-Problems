@@ -1,0 +1,104 @@
+{
+  "$id": "urn:trawler0:researchlog:problem:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "domains": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "human_log": {
+      "$ref": "event-v1.schema.json#/$defs/repoPath"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "properties": {
+        "adopted_existing_directory": {
+          "type": "boolean"
+        },
+        "registration_mode": {
+          "enum": [
+            "prospective",
+            "recovered",
+            "retrospective",
+            "unknown"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "owners": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "problem_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,95}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "source_refs": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "abandoned",
+        "active",
+        "archived",
+        "blocked",
+        "partially_solved",
+        "paused",
+        "proposed",
+        "published",
+        "solved",
+        "unknown"
+      ]
+    },
+    "tags": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "title": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "problem_id",
+    "title",
+    "status",
+    "created_at"
+  ],
+  "title": "Research problem metadata v1",
+  "type": "object"
+}

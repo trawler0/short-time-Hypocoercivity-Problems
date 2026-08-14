@@ -44,3 +44,22 @@ Thumbs.db
 desktop.ini
 .vscode/
 .idea/
+
+# Python packaging and test output
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+
+# Researchlog runtime and generated analysis exports
+.researchlog/
+logs/**/.state.jsonl.lock
+logs/**/.*.lock
+data/exports/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

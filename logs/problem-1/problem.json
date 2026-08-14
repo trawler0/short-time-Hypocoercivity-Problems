@@ -1,0 +1,28 @@
+{
+  "created_at": "2026-08-14T15:00:00Z",
+  "description": "Retrospective registration of the existing Problem 1 test run on higher-order short-time hypocoercivity.",
+  "domains": [
+    "mathematics"
+  ],
+  "human_log": "logs/problem-1/problem1-progress.tex",
+  "metadata": {
+    "adopted_existing_directory": true,
+    "registration_mode": "retrospective"
+  },
+  "owners": [
+    "repository maintainer"
+  ],
+  "problem_id": "problem-1",
+  "schema_version": 1,
+  "source_refs": [
+    "logs/problem-1/problem1-progress.tex",
+    "promising-approaches/rest_is_one_order_higher.tex"
+  ],
+  "status": "partially_solved",
+  "tags": [
+    "hypocoercivity",
+    "matrix-semigroups",
+    "short-time-asymptotics"
+  ],
+  "title": "Higher-Order Short-Time Hypocoercivity"
+}

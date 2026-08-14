@@ -609,3 +609,164 @@ Be willing to:
 * and continue changing perspective until the exact problem is either solved or the genuine limiting gap is known.
 
 **The goal is not to demonstrate a process. The goal is to produce a result that survives serious attempts to prove it wrong.**
+
+---
+## 16. Repository-Native Provenance Protocol
+
+This section operationalizes Section 11 when the research repository contains
+`researchlog/`, `AGENTS.md`, and `schemas/`. It is a hard deliverable constraint
+for repository-backed work and takes precedence over informal hand-written
+state-log conventions.
+
+### 16.1 Discover the protocol before research
+
+Before starting a problem or returning a patch:
+
+1. Read `AGENTS.md`, `docs/research-logging.md`,
+   `docs/data-dictionary.md`, and `schemas/event-draft-v1.schema.json`.
+2. Identify the stable problem ID from `logs/<problem-id>/problem.json`. If the
+   problem is not registered and file-writing is available, register it with
+   `python -m researchlog init` before substantial work. For a non-empty legacy
+   directory, use `--adopt-existing --registration-mode retrospective`; never
+   overwrite its human-readable sources.
+3. Run `python -m researchlog brief <problem-id>` to obtain the compact current
+   state and patch contract, then run `validate` and `doctor` when execution is
+   available.
+4. Read the canonical `state.jsonl` and current human-readable progress log
+   before opening a new research round.
+5. Never edit `state.jsonl` manually. It is append-only, sequence-numbered, and
+   hash-chained; use the package or an inbox draft batch.
+
+### 16.2 Treat observability as part of the result
+
+Every substantive attempt must be represented by `run.started` and `run.ended`.
+Record the exact model/version and interface when known; write `unknown` rather
+than guessing. Record whether attempts were genuinely independent and identify
+shared-context/contamination groups when relevant.
+
+The structured record must preserve, when applicable:
+
+* approaches proposed, promoted, blocked, abandoned, or reopened;
+* claims and their exact remaining gaps;
+* positive, negative, and inconclusive evidence;
+* formal, Lean, symbolic, numerical, literature, and audit verification;
+* artifacts and repository-relative source locations;
+* resource observations that were actually measured;
+* human interventions, including problem selection, prompting, clarification,
+  correction, method suggestions, counterexamples, code edits, literature
+  input, resource changes, stopping, restarting, verification, and distillation;
+* selection decisions such as continue, abandon, distill, paper candidate, or
+  publish;
+* failures of the research process or of the logging protocol itself.
+
+Do not log only the successful narrative. Negative and low-impact outcomes are
+part of the longitudinal research dataset.
+
+### 16.3 Keep the canonical ledger compact
+
+A state event is a decision-relevant fact, not a transcript. Do not store private
+chain-of-thought. Put long model outputs, raw transcripts, proofs, code,
+calculations, numerical output, and figures in artifacts, then cite and hash the
+artifacts from concise events.
+
+Use controlled fields from the schemas/data dictionary. Put experimental fields
+under `data` rather than inventing near-duplicate top-level names. Missing means
+not recorded; use explicit `unknown` or `not_applicable` only when that status is
+known.
+
+Subjective confidence, success probability, information value, remaining cost,
+and impact scores are annotations, not evidence. Do not present them as
+calibrated probabilities unless calibration has actually been established.
+
+### 16.4 Patch-return protocol
+
+When the current environment can execute the repository, append events with
+`python -m researchlog` and include the canonical ledger diff.
+
+When the environment cannot safely append to the user's local hash chain,
+generate a problem-aware draft template with
+`python -m researchlog template <problem-id>` when possible. The template is
+conservatively non-independent and contains rejected `REPLACE_*` markers; edit
+those fields and assert independence only when it is genuine. The returned patch
+must add an event-draft batch at:
+
+`logs/<problem-id>/inbox/<run-id>.jsonl`
+
+The batch should normally begin with `run.started` and end with `run.ended`.
+Omit canonical fields (`event_id`, `problem_id`, `sequence`, `recorded_at`,
+`prev_event_hash`, and `event_hash`); the package creates them. Inbox ingestion
+is idempotent by the input SHA-256, so an interrupted post-append deletion can
+be retried without duplicating the batch. Include, in the return instructions,
+the exact commands:
+
+```bash
+python -m researchlog ingest-inbox <problem-id>
+python -m researchlog validate <problem-id>
+python -m researchlog doctor <problem-id>
+```
+
+A pending inbox file is an incomplete deliverable, not a completed log update.
+
+### 16.5 Required statuses for candidate results
+
+For a candidate result, record at least:
+
+* a stable claim subject ID;
+* `data.claim_status`;
+* `data.verification_status`;
+* `data.novelty_status`;
+* the scope and exact unresolved gap;
+* source/evidence/artifact references;
+* an honest outcome.
+
+Do not upgrade a claim to verified merely because several correlated model calls
+agree. For Lean, distinguish generated formalization from successful kernel
+checking. For novelty, distinguish a plausible new observation from a scoped,
+dated literature search.
+
+When a human selects an idea for `promising-approaches/` or a paper, record both
+a `human.intervention` with type `distillation` and a `selection.recorded` event.
+This is required to preserve the post-selection mechanism for later statistics.
+
+### 16.6 Protocol gaps and recovery
+
+A run-ending record must state `data.capture_completeness` and
+`data.protocol_complete`. If the protocol failed, became obsolete, or omitted a
+field needed by a later analytics profile:
+
+1. Record a `protocol.gap` when possible, including missing fields and whether
+   recovery is recommended.
+2. Do not rewrite historic canonical events.
+3. Run `python -m researchlog recover prepare <problem-id>` to inventory/hash
+   raw and human-readable sources and create a frontier-model extraction prompt.
+   When a protocol revision affects many problems, use
+   `python -m researchlog recover prepare-all` to prepare every detected gap.
+4. Recover absent historical events or append `annotation.added` overlays.
+5. Require source references, extraction confidence, recovery bundle ID, and
+   review status for every recovered record.
+6. Use an explicit gap instead of fabricating unavailable timestamps, models,
+   prompts, resources, interventions, verification, or novelty.
+7. After inspection, ingest with `python -m researchlog recover ingest ...` and
+   rerun validation/doctor.
+
+Native, backfilled, and recovered observations must remain distinguishable so
+future analyses can exclude or sensitivity-test reconstructed data.
+
+### 16.7 Final repository gate
+
+In addition to the Return Gate in Section 14, verify before declaring the
+repository work complete:
+
+1. the problem is registered;
+2. the human-readable log and relevant artifacts are current;
+3. the run has both lifecycle events;
+4. failures, human interventions, verification, and selection were recorded;
+5. no canonical ledger was hand-edited;
+6. no inbox draft remains unconsumed unless the deliverable explicitly consists
+   of a patch plus ingestion command;
+7. `researchlog validate` reports no errors;
+8. `researchlog doctor` has either no material gaps or every gap is explicitly
+   documented and routed to recovery;
+9. the test suite passes when the codebase was changed;
+10. the returned patch contains enough structured provenance for the research
+    result and the future data-science branch.

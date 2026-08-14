@@ -1,0 +1,548 @@
+{
+  "$defs": {
+    "actor": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "interface": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "model": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "provider": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "session_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "ai",
+            "human",
+            "mixed",
+            "tool",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ],
+      "type": "object"
+    },
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "mime": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "path": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "role": {
+          "enum": [
+            "code",
+            "data",
+            "figure",
+            "human_log",
+            "lean",
+            "other",
+            "paper",
+            "patch",
+            "problem_metadata",
+            "problem_statement",
+            "promising_note",
+            "proof",
+            "raw_log",
+            "recovery_manifest",
+            "recovery_prompt",
+            "state_log",
+            "test"
+          ]
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "role"
+      ],
+      "type": "object"
+    },
+    "evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_path": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "data": {
+          "type": "object"
+        },
+        "independent": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "result": {
+          "enum": [
+            "error",
+            "inconclusive",
+            "not_run",
+            "refutes",
+            "supports",
+            "unknown"
+          ]
+        },
+        "strength": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "type": {
+          "enum": [
+            "audit",
+            "counterexample_search",
+            "empirical",
+            "formal",
+            "human_expert",
+            "lean",
+            "literature",
+            "machine_check",
+            "numerical",
+            "other",
+            "symbolic"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "result"
+      ],
+      "type": "object"
+    },
+    "metrics": {
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "impact_score": {
+          "maximum": 4,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "information_value": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "remaining_cost": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "success_probability": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "base_prompt_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "extraction_confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "input_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "backfill",
+            "live",
+            "migration",
+            "recovery"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        },
+        "recovery_bundle_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "repo_revision": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "review_status": {
+          "enum": [
+            "human_reviewed",
+            "machine_validated",
+            "rejected",
+            "unreviewed"
+          ]
+        },
+        "source_hashes": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "source_refs": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "mode",
+        "review_status"
+      ],
+      "type": "object"
+    },
+    "repoPath": {
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$",
+      "type": "string"
+    },
+    "subject": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "approach",
+            "artifact",
+            "claim",
+            "evidence",
+            "intervention",
+            "other",
+            "problem",
+            "recovery",
+            "resource",
+            "run",
+            "selection",
+            "verification"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "urn:trawler0:researchlog:event:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "run.started"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "run_id",
+          "actor"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "run.ended"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "run_id",
+          "outcome"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "annotation.added"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "properties": {
+              "reason": {
+                "type": "string"
+              },
+              "set": {
+                "type": "object"
+              },
+              "target_event_id": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "unset": {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "target_event_id",
+              "set"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "description": "One immutable event line in logs/<problem-id>/state.jsonl.",
+  "properties": {
+    "actor": {
+      "$ref": "#/$defs/actor"
+    },
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/artifact"
+      },
+      "type": "array"
+    },
+    "data": {
+      "type": "object"
+    },
+    "dependencies": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "event_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "event_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "event_type": {
+      "anyOf": [
+        {
+          "enum": [
+            "annotation.added",
+            "approach.abandoned",
+            "approach.blocked",
+            "approach.created",
+            "approach.promoted",
+            "approach.updated",
+            "artifact.recorded",
+            "claim.created",
+            "claim.updated",
+            "evidence.recorded",
+            "human.intervention",
+            "note",
+            "problem.created",
+            "problem.status_changed",
+            "protocol.gap",
+            "recovery.completed",
+            "recovery.failed",
+            "recovery.requested",
+            "resource.recorded",
+            "run.ended",
+            "run.started",
+            "selection.recorded",
+            "verification.recorded"
+          ]
+        },
+        {
+          "pattern": "^x\\.[a-z0-9][a-z0-9._-]{1,95}$",
+          "type": "string"
+        }
+      ]
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/evidence"
+      },
+      "type": "array"
+    },
+    "metrics": {
+      "$ref": "#/$defs/metrics"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "outcome": {
+      "enum": [
+        "abandoned",
+        "blocked",
+        "failure",
+        "inconclusive",
+        "not_applicable",
+        "not_attempted",
+        "partial",
+        "success",
+        "unknown"
+      ]
+    },
+    "prev_event_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "problem_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,95}$",
+      "type": "string"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "recorded_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "sequence": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "stage": {
+      "enum": [
+        "attack",
+        "distill",
+        "explore",
+        "intensify",
+        "maintain",
+        "measure",
+        "not_applicable",
+        "publish",
+        "reallocate",
+        "recover",
+        "select",
+        "specify",
+        "synthesize",
+        "unknown",
+        "verify"
+      ]
+    },
+    "subject": {
+      "$ref": "#/$defs/subject"
+    },
+    "summary": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "type": "string"
+    },
+    "tags": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "temporal_precision": {
+      "enum": [
+        "day",
+        "exact",
+        "hour",
+        "minute",
+        "order_only",
+        "unknown"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "problem_id",
+    "sequence",
+    "recorded_at",
+    "event_type",
+    "summary",
+    "prev_event_hash",
+    "event_hash"
+  ],
+  "title": "Canonical research log event v1",
+  "type": "object"
+}

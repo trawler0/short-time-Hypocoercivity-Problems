@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hypocoercivity-researchlog"
+version = "0.2.0"
+description = "Dependency-free, append-only provenance logging for AI-assisted research"
+requires-python = ">=3.10"
+authors = [{name = "Repository maintainers"}]
+classifiers = [
+  "Programming Language :: Python :: 3",
+]
+
+[project.scripts]
+researchlog = "researchlog.cli:main"
+
+[tool.setuptools]
+packages = ["researchlog"]
+
+[tool.researchlog]
+logs_dir = "logs"
+problem_schema = "schemas/problem-v1.schema.json"
+event_schema = "schemas/event-v1.schema.json"
+event_draft_schema = "schemas/event-draft-v1.schema.json"
+analytics_profile = "schemas/analytics-profile-v1.json"
