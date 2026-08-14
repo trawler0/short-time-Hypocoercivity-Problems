@@ -1,0 +1,46 @@
+# LaTeX build directories
+.build/
+**/.build/
+
+# Core LaTeX auxiliary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex
+*.synctex.gz
+*.toc
+
+# Additional LaTeX package output
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.idx
+*.ilg
+*.ind
+*.ist
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.xdv
+
+# Editor and operating-system clutter
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
