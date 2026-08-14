@@ -438,12 +438,13 @@ Do not store private chain-of-thought. Store compact decision-relevant summaries
 
 Preferred path:
 
-`logs/<problem-id>/progress.md`
+`logs/<problem-id>/progress.tex` and `logs/<problem-id>/progress.pdf`
 
 Keep this understandable without reconstructing the full run.
 
 Maintain:
 
+* input prompt (not include information from base_prompt.txt)
 * problem statement;
 * exact success criterion;
 * current status;
