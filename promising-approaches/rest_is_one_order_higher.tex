@@ -1,0 +1,158 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,margin=26mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={The Short-Time Remainder Is One Order Higher},
+  pdfsubject={Vanishing of the order 2m+2 term in short-time hypocoercivity}
+}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\DeclareMathOperator{\Log}{Log}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+\allowdisplaybreaks
+\emergencystretch=2em
+
+\title{\bfseries The Short-Time Remainder Is One Order Higher}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-2.2em}
+
+Let $C$ be a finite-dimensional matrix with
+\[
+H:=\frac{C+C^*}{2}\geq 0,
+\qquad
+F(t):=\lVert e^{-Ct}\rVert_2^2.
+\]
+If $C$ is hypocoercive with index $m$, the known leading-order result gives
+\begin{equation}\label{eq:known}
+F(t)=1-c\,t^{2m+1}+O(t^{2m+2}),
+\qquad c>0,
+\end{equation}
+as $t\downarrow0$.  The point of this note is that, when $m\geq1$, the
+remainder in \eqref{eq:known} is automatically one order better: there is no
+term of degree $2m+2$.  The first order at which a new coefficient can appear
+is $2m+3$.
+
+The mechanism is a parity property of the logarithmic norm.
+
+\begin{lemma}[Odd logarithmic normal form]\label{lem:odd}
+For every matrix $C$ there is a real-analytic function $\mu$, defined near
+$0$, such that
+\begin{equation}\label{eq:oddform}
+\log F(t)=t\,\mu(t^2)
+\end{equation}
+for all sufficiently small $t>0$.  In particular, the right-hand Taylor
+series of $\log F(t)$ contains only odd powers of $t$.
+\end{lemma}
+
+\begin{proof}
+Set
+\[
+Q(t):=e^{-C^*t}e^{-Ct},
+\qquad
+Z(t):=\Log Q(t).
+\]
+Thus $Q(t)$ is positive definite, $Z(t)$ is Hermitian, and
+$\log F(t)=\lambda_{\max}(Z(t))$.  The identity
+\[
+Q(-t)=e^{C^*t}Q(t)^{-1}e^{-C^*t}
+\]
+implies, by analytic functional calculus,
+\begin{equation}\label{eq:similarity}
+Z(-t)=-e^{C^*t}Z(t)e^{-C^*t}.
+\end{equation}
+Take the right polar decomposition $e^{C^*t}=U(t)R(t)$, where $U(t)$ is
+unitary and $R(t)>0$.  Both sides of \eqref{eq:similarity} are Hermitian.
+Consequently $R(t)Z(t)R(t)^{-1}$ is Hermitian, which gives
+$R(t)^2Z(t)=Z(t)R(t)^2$.  Since $R(t)>0$, it follows that $R(t)$ commutes with
+$Z(t)$, and hence
+\begin{equation}\label{eq:unitary}
+Z(-t)=-U(t)Z(t)U(t)^*.
+\end{equation}
+
+The polar unitary of an inverse is the adjoint, so $U(-t)=U(t)^*$.  Near
+$t=0$, let $V(t):=U(t)^{-1/2}$ be the analytic principal inverse square root and put
+$\widehat Z(t):=V(t)^*Z(t)V(t)$.  Since $V(-t)=U(t)V(t)$, equation
+\eqref{eq:unitary} yields
+\[
+\widehat Z(-t)=-\widehat Z(t).
+\]
+Therefore $\widehat Z(t)=tB(t^2)$ for a real-analytic Hermitian matrix family
+$B$.  By analytic Hermitian perturbation theory, the eigenvalues of $B(s)$
+can be parametrized by real-analytic branches.  After shrinking the interval,
+one branch $\mu(s)$ is maximal for every small $s>0$.  Since $\widehat Z(t)$
+is unitarily similar to $Z(t)$,
+\[
+\log F(t)=\lambda_{\max}(Z(t))
+=t\,\lambda_{\max}(B(t^2))=t\,\mu(t^2),
+\]
+which proves \eqref{eq:oddform}.
+\end{proof}
+
+\begin{proposition}[The missing even term]\label{prop:main}
+Assume \eqref{eq:known} and $m\geq1$.  Then, for some real number $b$,
+\begin{equation}\label{eq:refined}
+F(t)=1-c\,t^{2m+1}+b\,t^{2m+3}
++O\!\left(t^{2m+5}+t^{4m+2}\right).
+\end{equation}
+In particular, the coefficient of $t^{2m+2}$ is zero and
+\[
+F(t)=1-c\,t^{2m+1}+O(t^{2m+3}).
+\]
+Thus $2m+3$ is the next \emph{admissible} order for an independent
+correction.  The coefficient $b$ may itself vanish for a special matrix.
+\end{proposition}
+
+\begin{proof}
+Since $\log(1+x)=x+O(x^2)$, equation \eqref{eq:known} shows that the leading
+term of $\log F(t)$ is $-c\,t^{2m+1}$.  Lemma \ref{lem:odd} excludes every even
+power, so for some $b\in\mathbb R$,
+\[
+\log F(t)=-c\,t^{2m+1}+b\,t^{2m+3}+O(t^{2m+5}).
+\]
+Exponentiating gives \eqref{eq:refined}: the first nonlinear contribution is
+the square of the leading logarithmic term, hence has degree $4m+2$.  Because
+$m\geq1$, this degree is strictly larger than $2m+2$, and the claimed
+vanishing follows.
+\end{proof}
+
+For the first genuinely hypocoercive index, $m=1$, the statement is especially
+transparent:
+\[
+F(t)=1-ct^3+bt^5+\frac{c^2}{2}t^6+O(t^7).
+\]
+Thus the fourth-order coefficient vanishes, the fifth-order coefficient is the
+first potentially new one, and the sixth-order coefficient is already forced by $c$.
+
+\paragraph{Why the coercive case is different.}
+When $m=0$, one has $c=2\lambda_{\min}(H)>0$.  Lemma \ref{lem:odd} still gives
+\[
+\log F(t)=-ct+b t^3+O(t^5),
+\]
+but now exponentiation immediately produces an even term:
+\begin{equation}\label{eq:coercive}
+F(t)=1-ct+\frac{c^2}{2}t^2
++\left(b-\frac{c^3}{6}\right)t^3+O(t^4).
+\end{equation}
+Thus the assertion ``the remainder is one order higher'' is genuinely
+hypocoercive: it relies not only on the oddness of $\log F$, but also on the
+fact that its leading order is at least three.  In the coercive case the
+quadratic term $c^2t^2/2=2\lambda_{\min}(H)^2t^2$ is unavoidable.
+
+\vfill
+\footnotesize
+The leading law \eqref{eq:known} follows by squaring the finite-dimensional
+short-time result of F.~Achleitner, A.~Arnold, and E.~A.~Carlen,
+\emph{J. Differential Equations} \textbf{371} (2023), 83--115, Theorem~2.7.
+
+\end{document}
